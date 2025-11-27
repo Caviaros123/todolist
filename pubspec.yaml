@@ -1,6 +1,6 @@
 name: todo_list
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -8,6 +8,8 @@ environment:
 
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
   firebase_core: ^4.1.0
   intl: ^0.20.2
@@ -19,6 +21,12 @@ dependencies:
   google_sign_in: ^7.2.0
   firebase_crashlytics: ^5.0.2
   firebase_storage: ^13.0.2
+  flutter_local_notifications: ^17.2.3
+  timezone: ^0.9.4
+  table_calendar: ^3.1.2
+  timeago: ^3.7.0
+  badges: ^3.1.2
+  get_storage: ^2.1.1
 
 dev_dependencies:
   flutter_test:

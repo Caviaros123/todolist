@@ -1,20 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum TaskPriority {
-  low,
-  medium,
-  high,
-  urgent,
-}
+enum TaskPriority { low, medium, high, urgent }
 
-enum DueDateStatus {
-  none,
-  overdue,
-  today,
-  thisWeek,
-  upcoming,
-  completed,
-}
+enum DueDateStatus { none, overdue, today, thisWeek, upcoming, completed }
 
 class TaskModel {
   final String id;
@@ -24,14 +12,14 @@ class TaskModel {
   final bool isCompleted;
   final DateTime createdAt;
   final DateTime? completedAt;
-  
+
   // Nouveaux champs pour équipes
   final String? assignedToUserId;
   final String? assignedToUserName;
   final String? assignedToUserEmail;
   final String? teamId;
   final String? teamName;
-  
+
   // Nouveaux champs pour dates d'échéance
   final DateTime? dueDate;
   final TaskPriority priority;
@@ -87,7 +75,9 @@ class TaskModel {
       'description': description,
       'isCompleted': isCompleted,
       'createdAt': Timestamp.fromDate(createdAt),
-      'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      'completedAt': completedAt != null
+          ? Timestamp.fromDate(completedAt!)
+          : null,
       'assignedToUserId': assignedToUserId,
       'assignedToUserName': assignedToUserName,
       'assignedToUserEmail': assignedToUserEmail,
@@ -102,30 +92,47 @@ class TaskModel {
 
   factory TaskModel.fromMap(Object? obj, String id) {
     final map = obj as Map<String, dynamic>;
+
+    DateTime? parseOptionalTimestamp(dynamic value) {
+      if (value == null) return null;
+      try {
+        return (value as Timestamp).toDate();
+      } catch (e) {
+        return null;
+      }
+    }
+
+    DateTime parseRequiredTimestamp(dynamic value) {
+      if (value == null) return DateTime.now();
+      try {
+        return (value as Timestamp).toDate();
+      } catch (e) {
+        return DateTime.now();
+      }
+    }
+
     return TaskModel(
       id: id,
       userId: map['userId'] ?? '',
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       isCompleted: map['isCompleted'] ?? false,
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      completedAt: map['completedAt'] != null
-          ? (map['completedAt'] as Timestamp).toDate()
-          : null,
+      createdAt: parseRequiredTimestamp(map['createdAt']),
+      completedAt: parseOptionalTimestamp(map['completedAt']),
       assignedToUserId: map['assignedToUserId'],
       assignedToUserName: map['assignedToUserName'],
       assignedToUserEmail: map['assignedToUserEmail'],
       teamId: map['teamId'],
       teamName: map['teamName'],
-      dueDate: map['dueDate'] != null
-          ? (map['dueDate'] as Timestamp).toDate()
-          : null,
+      dueDate: parseOptionalTimestamp(map['dueDate']),
       priority: TaskPriority.values.firstWhere(
         (p) => p.name == map['priority'],
         orElse: () => TaskPriority.medium,
       ),
       hasReminder: map['hasReminder'] ?? false,
-      tags: (map['tags'] as List<dynamic>?)?.map((t) => t.toString()).toList() ?? [],
+      tags:
+          (map['tags'] as List<dynamic>?)?.map((t) => t.toString()).toList() ??
+          [],
     );
   }
 

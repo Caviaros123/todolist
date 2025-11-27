@@ -82,12 +82,15 @@ class TeamModel {
     this.avatarUrl,
   });
 
+  List<String> get memberIds => members.map((m) => m.userId).toList();
+
   Map<String, dynamic> toMap() {
     return {
       'name': name,
       'ownerId': ownerId,
       'ownerName': ownerName,
       'members': members.map((m) => m.toMap()).toList(),
+      'memberIds': memberIds,
       'createdAt': Timestamp.fromDate(createdAt),
       'description': description,
       'avatarUrl': avatarUrl,

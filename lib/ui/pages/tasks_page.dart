@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_list/models/task_model.dart';
-import 'package:todo_list/services/auth/auth_service.dart';
 import 'package:todo_list/services/task/task_service.dart';
-import '../widgets/task_tile.dart';
+import 'package:todo_list/ui/pages/settings_page.dart';
+import 'package:todo_list/ui/pages/teams_page.dart';
+import 'package:todo_list/ui/widgets/app_drawer.dart';
+
 import '../widgets/add_task_sheet.dart';
-import 'sign_in_page.dart';
+import '../widgets/task_tile.dart';
 
 class TasksPage extends StatelessWidget {
   static const route = '/tasks';
-  const TasksPage({super.key});
+  final VoidCallback? onThemeToggle;
+  const TasksPage({super.key, this.onThemeToggle});
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +26,18 @@ class TasksPage extends StatelessWidget {
           title: const Text('Mes tâches'),
           actions: [
             IconButton(
-              tooltip: 'Se déconnecter',
-              icon: const Icon(Icons.logout),
-              onPressed: () async {
-                await context.read<AuthService>().signOut();
-                if (context.mounted) {
-                  Navigator.of(context).pushReplacementNamed(SignInPage.route);
-                }
-              },
+              icon: const Icon(Icons.groups_rounded),
+              tooltip: 'Mes équipes',
+              onPressed: () => Navigator.pushNamed(context, TeamsPage.route),
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings_rounded),
+              tooltip: 'Paramètres',
+              onPressed: () => Navigator.pushNamed(context, SettingsPage.route),
             ),
           ],
         ),
+        drawer: const AppDrawer(),
         body: const _TaskList(),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () => showModalBottomSheet(
