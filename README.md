@@ -9,3 +9,10 @@ My Projets using Flutter on PlayStore And App Store
 - KAlisso Boutique en ligne
 
 A new Flutter project.
+
+## Lancer le projet
+
+```bash
+flutter pub get
+flutter run -d chrome
+```
